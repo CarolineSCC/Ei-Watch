@@ -55,7 +55,7 @@ body {
 }
 
 /* RESPONSIVO */
-@media (max-width: 768px) {
+@media (max-width: 400px) {
   .topnav a:not(.icon) {
     display: none; /* links escondidos */
   }
@@ -341,3 +341,4 @@ p {
     font-size: 22px;
   }
 }
+
