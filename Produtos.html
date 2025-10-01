@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Ei Watch - Loja Tamagotchi</title>
+  <link rel="icon" href="imagem/logo.png" type="image/x-icon">
+  <link rel="stylesheet" href="css/style_produtos.css">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+  <style>
+    .estoque-text {
+      font-family: Arial, sans-serif;
+      margin-top: 10px;
+      color: #000000;
+    }
+
+    .buy-button[disabled] {
+      background-color: gray;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <!-- MENU SUPERIOR -->
+  <div class="topnav" id="myTopnav">
+    <img src="imagem/logo.png" alt="Logo" class="nav-logo">
+    <a href="index.html">Início</a>
+    <a href="Produtos.html">Produtos</a>
+    <a href="instruções.html">Como Jogar</a>
+    <a href="administracao.html">Administração</a>
+    <a href="javascript:void(0);" class="icon" onclick="toggleMenu()">&#9776;</a>
+  </div>
+
+  <!-- CABEÇALHO -->
+  <header>
+    <h1>EI WATCHI</h1>
+    <p class="subtitle">Adote um pet digital!</p>
+  </header>
+
+  <!-- PRODUTOS -->
+  <main class="store">
+    <div class="product">
+      <img src="imagem/tama_rosa.JPG" alt="Tamagotchi Rosa">
+      <h2>Rosa</h2>
+      <button class="buy-button" data-color="Rosa">Fazer Pedido</button>
+    </div>
+    <div class="product">
+      <img src="imagem/tama_azul.JPG" alt="Tamagotchi Azul">
+      <h2>Azul</h2>
+      <button class="buy-button" data-color="Azul">Fazer Pedido</button>
+    </div>
+    <div class="product">
+      <img src="imagem/tama_vermelho.JPG" alt="Tamagotchi Vermelho">
+      <h2>Vermelho</h2>
+      <button class="buy-button" data-color="Vermelho">Fazer Pedido</button>
+    </div>
+    <div class="product">
+      <img src="imagem/tama_amarelo.JPG" alt="Tamagotchi Amarelo">
+      <h2>Amarelo</h2>
+      <button class="buy-button" data-color="Amarelo">Fazer Pedido</button>
+    </div>
+  </main>
+
+  <!-- MODAL DE CADASTRO -->
+  <div class="modal" id="modal">
+    <div class="modal-content" style="position: relative; padding: 20px; background-color: #f1f4f8; width: 300px; margin: 100px auto; border-radius: 2px;">
+      <button class="close-btn" onclick="fecharModal()">&times;</button>
+      <h2 style="font-family: Arial, sans-serif;">Cadastro</h2>
+      <input type="text" id="nome" placeholder="Nome">
+      <input type="email" id="email" placeholder="E-mail">
+      <p style="font-family: Arial, sans-serif; color:#2e76ba;">Data do Pedido</p>
+      <input type="date" id="data" placeholder="Escolha a data">
+      <button id="enviar" style="font-family: Arial, sans-serif;">OK</button>
+    </div>
+  </div>
+
+  <!-- MODAL DE SUCESSO -->
+  <div class="modal" id="modalSucesso">
+    <div class="modal-content" style="background-color:#f1f4f8 ; text-align: center;">
+      <h2 style="font-family: Arial, sans-serif; color: #2e76ba;">Pedido feito com sucesso!</h2>
+      <p style="font-family: Arial, sans-serif;">Um link para acompanhar o seu pedido será enviado diretamente para o seu e-mail.</p>
+      <button id="okSucesso" style="font-family: Arial, sans-serif; background: #2e76ba; padding: 10px 20px; cursor: pointer;">OK</button>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-logo">
+        <img src="imagem/logo.png" alt="logo">
+      </div>
+
+      <div class="footer-links">
+        <h3>Links Rápidos</h3>
+        <ul>
+          <li><a href="index.html">Início</a></li>
+          <li><a href="instruções.html">Como Jogar</a></li>
+          <li><a href="administracao.html">Administração</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-contact">
+        <p>Desenvolvedores: Alison Rodrigues, Bárbara Rupp, Beatriz Tomé, Caroline Cruz, Douglas Wallington, Gabrielly Gárcia, Guilherme Pesce</p>
+        <p>⚠️ Este site foi criado para fins pedagógicos e educativos. Todo o conteúdo é apenas ilustrativo e não possui fins comerciais.</p>
+        <p>Senai VolksWagen</p>
+        <div class="footer-bottom">
+          <p>&copy; 2025 Ei Watch. Todos os direitos reservados.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SOM DE CLIQUE -->
+  <audio id="clickSound" src="assets/click-sound.mp3" preload="auto"></audio>
+
+  <!-- SCRIPT -->
+  <script>
+    const modal = document.getElementById("modal");
+    const modalSucesso = document.getElementById("modalSucesso");
+    const nomeInput = document.getElementById("nome");
+    const emailInput = document.getElementById("email");
+    const dataInput = document.getElementById("data");
+    const enviarBtn = document.getElementById("enviar");
+    const okSucessoBtn = document.getElementById("okSucesso");
+    let tamagotchiEscolhido = "";
+
+    function fecharModal() {
+      modal.style.display = "none";
+    }
+
+    // Fechar ao clicar fora do conteúdo
+    window.onclick = function(event) {
+      if (event.target === modal) {
+        fecharModal();
+      }
+    }
+
+    // Inicializar estoque ou recuperar do localStorage
+    let estoque = JSON.parse(localStorage.getItem("estoque")) || {
+      Rosa: 5,
+      Azul: 5,
+      Vermelho: 4,
+      Amarelo: 1
+    };
+
+    // Atualizar interface com o estoque atual
+    function atualizarEstoqueUI() {
+      document.querySelectorAll(".buy-button").forEach(btn => {
+        const cor = btn.dataset.color;
+        const produtoDiv = btn.parentElement;
+
+        let estoqueText = produtoDiv.querySelector(".estoque-text");
+        if (!estoqueText) {
+          estoqueText = document.createElement("p");
+          estoqueText.className = "estoque-text";
+          produtoDiv.appendChild(estoqueText);
+        }
+
+        if (estoque[cor] <= 0) {
+          btn.disabled = true;
+          btn.textContent = "Produto Esgotado";
+          estoqueText.textContent = "Estoque: 0";
+        } else {
+          btn.disabled = false;
+          btn.textContent = "Fazer Pedido";
+          estoqueText.textContent = `Estoque: ${estoque[cor]}`;
+        }
+      });
+    }
+
+    atualizarEstoqueUI(); // Chama ao carregar a página
+
+    // Abrir modal ao clicar em "Fazer Pedido"
+    document.querySelectorAll(".buy-button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        tamagotchiEscolhido = btn.dataset.color;
+        modal.style.display = "flex";
+      });
+    });
+
+    // Enviar pedido
+    enviarBtn.addEventListener("click", () => {
+      const nome = nomeInput.value.trim();
+      const email = emailInput.value.trim();
+      const data = dataInput.value;
+
+      if (!nome || !email || !data) {
+        alert("Preencha todos os campos!");
+        return;
+      }
+
+      // Reduz o estoque
+      if (estoque[tamagotchiEscolhido] > 0) {
+        estoque[tamagotchiEscolhido]--;
+        localStorage.setItem("estoque", JSON.stringify(estoque));
+      }
+
+      const pedido = { nome, email, cor: tamagotchiEscolhido, data };
+      const pedidos = JSON.parse(localStorage.getItem("pedidos")) || [];
+      pedidos.push(pedido);
+      localStorage.setItem("pedidos", JSON.stringify(pedidos));
+
+      // Fecha modal de cadastro e abre modal de sucesso
+      modal.style.display = "none";
+      modalSucesso.style.display = "flex";
+
+      // Limpa os campos
+      nomeInput.value = "";
+      emailInput.value = "";
+      dataInput.value = "";
+
+      atualizarEstoqueUI(); // Atualiza estoque na tela
+    });
+
+    // Fechar modal de sucesso
+    okSucessoBtn.addEventListener("click", () => {
+      modalSucesso.style.display = "none";
+    });
+
+    // Toggle menu responsivo
+    function toggleMenu() {
+      const x = document.getElementById("myTopnav");
+      if (x.className === "topnav") {
+        x.className += " responsive";
+      } else {
+        x.className = "topnav";
+      }
+    }
+  </script>
+</body>
+</html>

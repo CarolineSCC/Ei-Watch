@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Ei Watch - Administração</title>
+  <link rel="icon" href="imagem/logo.png" type="image/x-icon">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Responsivo -->
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 30px;
+      background: #f4f6f8;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+
+    .container {
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      padding: 25px 30px;
+      max-width: 500px;
+      width: 100%;
+      padding-bottom: 80px; /* espaço para não colidir com botão fixo */
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: #103173;
+    }
+
+    /* Tabela responsiva */
+    .table-wrapper {
+      overflow-x: auto;
+      margin: 20px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 300px;
+    }
+
+    th, td {
+      padding: 12px 15px;
+      text-align: center;
+      border-radius: 8px;
+    }
+
+    th {
+      background-color: #103173;
+      color: #ffffff;
+    }
+
+    td {
+      background-color: #f4f6f8;
+      color: #103173;
+      font-weight: 500;
+    }
+
+    /* Formulário */
+    #adminArea label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      font-weight: 500;
+      color: #103173;
+    }
+
+    input {
+      width: 80px;
+      padding: 6px;
+      border-radius: 8px;
+      border: 1px solid #103173;
+      outline: none;
+      transition: 0.2s;
+      text-align: center;
+      font-size: 15px;
+    }
+
+    input:focus {
+      border-color: #103173;
+      box-shadow: 0 0 5px rgba(255, 255, 255, 0.4);
+    }
+
+    /* Botão Salvar */
+    .btn-salvar {
+      background-color: #103173;   /* Verde */
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+    .btn-salvar:hover { background-color: #abbde2; }
+
+    /* Botão Fechar (fixo) */
+    .btn-fechar {
+      padding: 10px 20px;
+      background-color: #103173;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      font-size: 16px;
+      transition: background 0.3s;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+    .btn-fechar:hover { background-color: #abbde2; }
+
+    /* simples toast (opcional) */
+    .toast {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      background: rgba(0,0,0,0.8);
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      display: none;
+      z-index: 1100;
+    }
+  </style>
+</head>
+<body>
+  <!-- Botão fechar (fora do form e com type="button") -->
+  <button id="btnFechar" class="btn-fechar" type="button" aria-label="Fechar painel">Fechar</button>
+
+  <div class="container" id="painelEstoque">
+    <h1>Controle de Estoque</h1>
+    <p><strong>Estoque Atual:</strong></p>
+
+    <!-- Tabela responsiva -->
+    <div class="table-wrapper">
+      <table id="estoqueTabela">
+        <thead>
+          <tr>
+            <th>Cor</th>
+            <th>Quantidade</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Linhas geradas pelo JS -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Área de administração -->
+    <div id="adminArea">
+      <h2>Atualizar Estoque</h2>
+      <form id="formEstoque">
+        <label>Rosa: <input type="number" id="Rosa" min="0"></label>
+        <label>Azul: <input type="number" id="Azul" min="0"></label>
+        <label>Vermelho: <input type="number" id="Vermelho" min="0"></label>
+        <label>Amarelo: <input type="number" id="Amarelo" min="0"></label>
+
+        <!-- garante submit correto -->
+        <button type="submit" class="btn-salvar">Salvar Estoque</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // Inicializar estoque ou recuperar do localStorage
+    let estoque = JSON.parse(localStorage.getItem("estoque")) || {
+      Rosa: 5,
+      Azul: 5,
+      Vermelho: 4,
+      Amarelo: 1
+    };
+
+    const tabelaBody = document.querySelector("#estoqueTabela tbody");
+    const formEstoque = document.getElementById("formEstoque");
+    const painel = document.getElementById("painelEstoque");
+    const btnFechar = document.getElementById("btnFechar");
+    const toastEl = document.getElementById("toast");
+
+    // Atualizar tabela
+    function atualizarTabela() {
+      tabelaBody.innerHTML = "";
+      for (let cor in estoque) {
+        let row = document.createElement("tr");
+        let tdCor = document.createElement("td");
+        tdCor.textContent = cor;
+        let tdQtd = document.createElement("td");
+        tdQtd.textContent = estoque[cor];
+        row.appendChild(tdCor);
+        row.appendChild(tdQtd);
+        tabelaBody.appendChild(row);
+
+        // Preencher inputs
+        const input = document.getElementById(cor);
+        if (input) input.value = estoque[cor];
+      }
+    }
+
+    // Salvar estoque
+    formEstoque.addEventListener("submit", function(e) {
+      e.preventDefault();
+      for (let cor in estoque) {
+        let novoValor = parseInt(document.getElementById(cor).value);
+        estoque[cor] = isNaN(novoValor) ? 0 : novoValor;
+      }
+      localStorage.setItem("estoque", JSON.stringify(estoque));
+      atualizarTabela();
+      showToast("💖 Estoque atualizado com sucesso!");
+    });
+
+    // Inicializar
+    atualizarTabela();
+
+// Botão Fechar: vai para a página de administração
+btnFechar.addEventListener("click", function() {
+  window.location.href = "administracao.html"; // <-- coloque aqui o nome correto da sua página
+});
+
+    // pequena função de toast para feedback visual
+    function showToast(msg, duration = 1800) {
+      toastEl.textContent = msg;
+      toastEl.style.display = "block";
+      setTimeout(() => { toastEl.style.display = "none"; }, duration);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Ei Watch - Administração</title>
+  <link rel="icon" href="imagem/logo.png" type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 30px;
+      background: #f4f6f8; /* fundo mais neutro */
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+
+    .container {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      padding: 25px 30px;
+      max-width: 900px;
+      width: 100%;
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: #103173;
+    }
+
+    /* Tabela responsiva */
+    .table-wrapper {
+      overflow-x: auto;
+      margin-top: 15px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 600px;
+      font-size: 14px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+      color: #103173;
+    }
+
+    th {
+      background-color: #103173; /* cinza-azulado */
+      color: #ecf0f1;
+      font-weight: 600;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f5f7fa; /* listrado */
+    }
+
+    tr:nth-child(odd) {
+      background-color: #ffffff;
+    }
+
+    tr.concluido {
+      background-color: #e6ebf0; /* verde claro */
+      font-weight: bold;
+    }
+
+    button {
+      padding: 6px 10px;
+      border: none;
+      border-radius: 6px;
+      background: #103173;
+      color: #fff;
+      cursor: pointer;
+      font-size: 13px;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #adc8fc;
+      transform: translateY(-2px);
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    header img {
+      max-width: 100px;
+    }
+
+    header h1 {
+      color: #103173;
+      margin: 10px 0 5px 0;
+    }
+
+    header .subtitle {
+      color: #103173;
+      font-weight: bold;
+    }
+
+    .btn-fechar {
+      padding: 10px 20px;
+      background-color: #103173;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+      transition: background 0.3s;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+
+    .btn-fechar:hover {
+      background-color: #b5cbf7;
+    }
+
+    /* Ajustes para telas pequenas */
+    @media (max-width: 600px) {
+      table {
+        font-size: 12px;
+        min-width: 100%;
+      }
+      th, td {
+        padding: 8px;
+      }
+      header h1 {
+        font-size: 18px;
+      }
+      header .subtitle {
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+ <!-- Botão fechar (fora do form e com type="button") -->
+  <button id="btnFechar" class="btn-fechar" type="button" >Fechar</button>
+
+  <div class="container">
+    <header>
+      <img src="imagem/logo.png" alt="Logo">
+      <h1>Administração</h1>
+      <p class="subtitle">Pedidos Registrados</p>
+    </header>
+
+    <section class="admin-section" id="adminSection">
+      <div class="table-wrapper">
+        <table id="tabelaPedidos">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>E-mail</th>
+              <th>Cor do Tamagotchi</th>
+              <th>Data</th>
+              <th>Status</th>
+              <th>Ação</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const tabelaPedidos = document.getElementById("tabelaPedidos").querySelector("tbody");
+
+    // Função para atualizar a tabela
+    function atualizarTabela() {
+      tabelaPedidos.innerHTML = "";
+      const pedidos = JSON.parse(localStorage.getItem("pedidos")) || [];
+      pedidos.forEach((pedido, index) => {
+        const row = document.createElement("tr");
+        row.className = pedido.concluido ? "concluido" : "";
+        row.innerHTML = `
+          <td>${pedido.nome}</td>
+          <td>${pedido.email}</td>
+          <td>${pedido.cor}</td>
+          <td>${pedido.data}</td>
+          <td>${pedido.concluido ? "Concluído" : "Pendente"}</td>
+          <td><button onclick="marcarConcluido(${index})">${pedido.concluido ? "Desmarcar" : "Concluir"}</button></td>
+        `;
+        tabelaPedidos.appendChild(row);
+      });
+    }
+
+    // Marcar pedido como concluído
+    function marcarConcluido(index) {
+      const pedidos = JSON.parse(localStorage.getItem("pedidos")) || [];
+      pedidos[index].concluido = !pedidos[index].concluido;
+      localStorage.setItem("pedidos", JSON.stringify(pedidos));
+      atualizarTabela();
+    }
+
+    // Inicializar tabela
+    atualizarTabela();
+    
+// Botão Fechar: vai para a página de administração
+btnFechar.addEventListener("click", function() {
+  window.location.href = "administracao.html"; // <-- coloque aqui o nome correto da sua página
+});
+  </script>
+</body>
+</html>

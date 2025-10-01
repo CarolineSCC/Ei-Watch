@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Ei Watch - Loja Tamagotchi</title>
+  <link rel="icon" href="imagem/logo.png" type="image/x-icon">
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Fonte Pixel -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <!-- Fonte legível -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  
+</head>
+<body>
+  <div class="topnav" id="myTopnav">
+    <img src="imagem/logo.png" alt="Logo" class="nav-logo">
+    <a href="index.html">Início</a>
+    <a href="Produtos.html">Produtos</a>
+    <a href="instruções.html">Como Jogar</a>
+    <a href="administracao.html">Administração</a>
+    <a href="javascript:void(0);" class="icon" onclick="toggleMenu()">&#9776;</a>
+  </div>
+
+  <!-- Primeira tela -->
+  <section class="hero">
+    <img src="imagem/imagemfundo.png" alt="Imagem de fundo" >
+  </section>
+  <!-- Segunda tela -->
+  <section class="retro">
+    <h1>BEM-VINDO AO MUNDO<br>DOS TAMAGOTCHIS!</h1>
+    <p>Aqui você encontra o pet virtual que marcou gerações.<br>Se divirta como nos anos 90!</p>
+    <div class="hearts">❤ ❤ ❤</div>
+
+    <!-- Imagens dos tamagotchis -->
+    <div class="container">
+      <div class="tamagotchis">
+        <img src="imagem/tamagotch_pixel.png" alt="Tamagotchi Azul">
+        <img src="imagem/tamagotchi_pixel1.png" alt="Tamagotchi Rosa">
+        <img src="imagem/tamagotch2.png" alt="Tamagotchi Amarelo">
+      </div>
+
+      <!-- Botão de comprar -->
+      <a href="Produtos.html" class="img-link">
+        <img src="imagem/botão_fazer_pedido.png" alt="Botão de fazer pedido">
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER MODERNO -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-logo">
+        <img src="imagem/logo.png" alt="logo">
+      </div>
+
+      <div class="footer-links">
+        <h3>Links Rápidos</h3>
+        <ul>
+          <li><a href="Produtos.html">Produtos</a></li>
+          <li><a href="instruções.html">Como Jogar</a></li>
+          <li><a href="administracao.html">Administração</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-contact">
+        <p>Desenvolvedores: Alison Rodrigues, Bárbara Rupp, Beatriz Tomé, Caroline Cruz, Douglas Wallington, Gabrielly Gárcia, Guilherme Pesce</p>
+        <p>⚠️ Este site foi criado para fins pedagógicos e educativos. Todo o conteúdo é apenas ilustrativo e não possui fins comerciais.</p>
+        <p>Senai VolksWagen</p>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2025 Ei Watch. Todos os direitos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      const x = document.getElementById("myTopnav");
+      if (x.className === "topnav") {
+        x.className += " responsive";
+      } else {
+        x.className = "topnav";
+      }
+    }
+  </script>
+</body>
+</html>
+
