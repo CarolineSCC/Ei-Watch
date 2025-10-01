@@ -55,7 +55,7 @@ body {
 }
 
 /* RESPONSIVO */
-@media (max-width: 400px) {
+@media (max-width: 900px) {
   .topnav a:not(.icon) {
     display: none; /* links escondidos */
   }
@@ -125,14 +125,14 @@ section {
 }
 
 /* RESPONSIVO PROPORCIONAL */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .hero {
     min-height: 50vh;
     max-height: 60vh;
   }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 900px) {
   .hero {
     min-height: 35vh;
     max-height: 45vh;
@@ -142,7 +142,7 @@ section {
   }
 }
 
-@media (max-width: 400px) {
+@media (max-width: 900px) {
   .hero {
     max-height: 150vh;
   }
@@ -172,7 +172,7 @@ section {
 }
 
 
-@media (max-width: 400px) {
+@media (max-width: 900px) {
   .tamagotchis img {
     width: 170px;
   }
@@ -190,7 +190,7 @@ section {
   transform: scale(1.5);
 }
 
-@media (max-width: 400px) {
+@media (max-width: 900px) {
   .img-link img {
     width: 200px;
     transition: transform 0.3s, box-shadow 0.3s;
@@ -305,7 +305,7 @@ p {
 }
 
 /* RESPONSIVIDADE PARA CELULAR */
-@media (max-width: 450px) {
+@media (max-width: 900px) {
   h1 {
     font-size: 48px;
     margin-top: 200px;
@@ -341,4 +341,5 @@ p {
     font-size: 22px;
   }
 }
+
 
